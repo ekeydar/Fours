@@ -1,0 +1,13 @@
+@import "custom";
+@import "~bootstrap/scss/bootstrap";
+
+
+body {
+    padding: 30px;
+}
+
+.upload-box {
+    border: 4px black dashed;
+    height: 200px;
+    text-align: center;
+}

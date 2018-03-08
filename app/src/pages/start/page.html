@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-12">
+        <div class="upload-box"
+             ngf-multiple="true"
+             ngf-drop-available="true"
+             ngf-drag-over-class="'dragover'"
+             ngf-drop="main.uploadFiles($files,'file')"
+             ngf-select="main.uploadFiles($files,'file')"
+        >
+            <span>Select File or Drop File</span>
+        </div>
+    </div>
+</div>
+<div class="row" style="padding-top: 10px">
+    <div class="col-3" ng-repeat="card in main.cards">
+            <div>
+                <svg width="300" height="440" style="border: 1px black solid" xmlns="http://www.w3.org/2000/svg">
+                    <text x="150" y="30" text-anchor="middle" font-weight="bold" font-size="20">
+                        {{ card.series.name }}
+                    </text>
+                    <image href="{{ card.url }}" x="10" y="50" height="280px" width="280px"/>
+                    <text x="280" y="350">
+                        &bull;
+                        {{ card.name }}
+                    </text>
+                </svg>
+            </div>
+            <div>
+                <button class="btn btn-outline-danger">
+                    <i class="fa fa-trash"></i>
+                </button>
+                <form>
+                    <div class="form-group">
+                        <label>
+                            שם
+                        </label>
+                        <input class="form-control" type="text" ng-model="card.name">
+                    </div>
+                </form>
+            </div>
+    </div>
+</div>
+
+
