@@ -39,6 +39,9 @@
                 <button class="btn btn-success" ng-click="main.doSave()">
                     שמור
                 </button>
+                <button class="btn btn-success" ng-click="main.draw()">
+                    צייר
+                </button>
             </div>
         </h1>
         <div class="row" style="padding-top: 10px" ng-repeat="group in main.groups">
@@ -51,23 +54,8 @@
                 <div class="row">
                     <div class="col-3" ng-repeat="card in group.cards">
                         <div>
-                            <svg width="300" height="440" style="border: 1px black solid"
-                                 xmlns="http://www.w3.org/1999/svg"
-                                 class="card-svg"
-                            >
-                                <text x="150" y="30" text-anchor="middle" font-weight="bold" font-size="20">
-                                    {{ card.group.name }}
-                                </text>
-                                <!--<image ng-attr-href="{{ card.url }}" x="10" y="50" height="280px" width="280px"/>-->
-                                <text ng-attr-y="{{gc.y}}" x="280" text-anchor="left"
-                                      ng-repeat="gc in card.group.cards"
-                                      ng-if="$index <= 3"
-                                      ng-class="{'active-card': $index==card.index}"
-                                >
-                                    &bull;
-                                    {{ gc.name }}
-                                </text>
-                            </svg>
+                            <canvas style="border: 1px black solid" width="300" height="440" ng-attr-id="canvas-{{card.id}}">
+                            </canvas>
                         </div>
                         <div>
                             <button class="btn btn-outline-danger" ng-click="main.removeCard(card)">

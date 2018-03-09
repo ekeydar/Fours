@@ -39,10 +39,11 @@ class NullGroup extends Group {
 }
 
 class Card {
-    constructor(group, url) {
+    constructor(id, group, url) {
         this.url = url;
         group.addCard(this);
         this.name = null;
+        this.id = id;
     }
     asJson() {
         return {
@@ -57,6 +58,15 @@ class Card {
         let y = 350 + this.index*20;
         return y;
     }
+    draw() {
+        let canvas = document.getElementById(`canvas-${this.id}`);
+        let ctx = canvas.getContext("2d");
+        var img = new Image;
+        img.src = this.url;
+        img.onload = function() {
+            ctx.drawImage(img, 0, 50, 300, 300);
+        }
+    }
 }
 
 
@@ -67,21 +77,27 @@ export default class StartController {
         this.$sce = $sce
         this.Upload = Upload;
         this.$interval = $interval;
+        this.lastCardId = 0;
         this.nullGroup = new NullGroup();
         this.groups = [this.nullGroup];
         this.restore();
         // this.savePromise = $interval(() => {
         //     this.save();
         // }, 10000)
+
     }
 
+    getCardId() {
+        this.lastCardId++;
+        return this.lastCardId;
+    }
 
 
     uploadFiles(files) {
         for (let f of files) {
             this.Upload.base64DataUrl(f).then(url => {
                 this.$sce.trustAsUrl(url);
-                new Card(this.nullGroup, url)
+                new Card(this.getCardId(), this.nullGroup, url)
             })
         }
         this.save();
@@ -134,7 +150,7 @@ export default class StartController {
         let n = g.name;
         let group = g.isNull ? new NullGroup() : new Group(n);
         for (let c of g.cards) {
-            let card = new Card(group, c.url);
+            let card = new Card(this.getCardId(), group, c.url);
             card.name = c.name;
         }
         return group;
@@ -143,6 +159,13 @@ export default class StartController {
         this.nullGroup = new NullGroup();
         this.groups = [this.nullGroup];
         this.save();
+    }
+    draw() {
+        for (let g of this.groups) {
+            for (let c of g.cards) {
+                c.draw();
+            }
+        }
     }
 }
 

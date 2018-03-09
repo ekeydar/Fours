@@ -56051,7 +56051,7 @@ ngFileUpload.service('UploadExif', ['UploadResize', '$q', function (UploadResize
 /* 18 */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n    <div class=\"col-3 sidebar\">\n        <div class=\"upload-box\"\n             ngf-multiple=\"true\"\n             ngf-drop-available=\"true\"\n             ngf-drag-over-class=\"'dragover'\"\n             ngf-drop=\"main.uploadFiles($files,'file')\"\n             ngf-select=\"main.uploadFiles($files,'file')\"\n        >\n            <span>בחר או גרור תמונות</span>\n        </div>\n        <div>\n            <h4>יצירת רביעיה חדשה</h4>\n            <form ng-submit=\"main.createGroup()\">\n                <div class=\"form-group\">\n                    <label>\n                        שם\n                    </label>\n                    <input class=\"form-control\" type=\"text\" ng-model=\"main.newGroupName\">\n                </div>\n                <button ng-disabled=\"!main.newGroupFormOk()\" class=\"btn btn-primary\" type=\"submit\">יצירה</button>\n            </form>\n        </div>\n        <ul class=\"list-group\">\n            <li class=\"bg-warning list-group-item\" ng-repeat=\"group in main.groups\">\n                {{ group.name }}: {{ group.cards.length}} קלפים\n            </li>\n        </ul>\n    </div>\n\n    <div class=\"col-9\">\n        <h1>\n            <i class=\"fas fa-club\"></i>\n            רביעיות\n            <div class=\"btn-group float-right\" role=\"group\">\n                <button class=\"btn btn-danger\" ng-click=\"main.restart()\">\n                    התחל מהתחלה\n                </button>\n                <button class=\"btn btn-success\" ng-click=\"main.doSave()\">\n                    שמור\n                </button>\n            </div>\n        </h1>\n        <div class=\"row\" style=\"padding-top: 10px\" ng-repeat=\"group in main.groups\">\n            <div class=\"col-12\">\n                <div class=\"row\">\n                    <div class=\"col-12 text-center\">\n                        <h3>{{group.name}}</h3>\n                    </div>\n                </div>\n                <div class=\"row\">\n                    <div class=\"col-3\" ng-repeat=\"card in group.cards\">\n                        <div>\n                            <svg width=\"300\" height=\"440\" style=\"border: 1px black solid\"\n                                 xmlns=\"http://www.w3.org/1999/svg\"\n                                 class=\"card-svg\"\n                            >\n                                <text x=\"150\" y=\"30\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"20\">\n                                    {{ card.group.name }}\n                                </text>\n                                <!--<image ng-attr-href=\"{{ card.url }}\" x=\"10\" y=\"50\" height=\"280px\" width=\"280px\"/>-->\n                                <text ng-attr-y=\"{{gc.y}}\" x=\"280\" text-anchor=\"left\"\n                                      ng-repeat=\"gc in card.group.cards\"\n                                      ng-if=\"$index <= 3\"\n                                      ng-class=\"{'active-card': $index==card.index}\"\n                                >\n                                    &bull;\n                                    {{ gc.name }}\n                                </text>\n                            </svg>\n                        </div>\n                        <div>\n                            <button class=\"btn btn-outline-danger\" ng-click=\"main.removeCard(card)\">\n                                <i class=\"fa fa-trash\"></i>\n                            </button>\n                            <form>\n                                <select class=\"form-control\"\n                                        ng-options=\"group.name for group in main.groups\"\n                                        ng-model=\"card.group\"\n                                        ng-change=\"main.cardGroupChanged(card)\">\n                                </select>\n                                <div class=\"form-group\">\n                                    <label>\n                                        שם\n                                    </label>\n                                    <input class=\"form-control\" type=\"text\"\n                                           ng-model=\"card.name\"\n                                    >\n                                </div>\n                            </form>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>";
+module.exports = "<div class=\"row\">\n    <div class=\"col-3 sidebar\">\n        <div class=\"upload-box\"\n             ngf-multiple=\"true\"\n             ngf-drop-available=\"true\"\n             ngf-drag-over-class=\"'dragover'\"\n             ngf-drop=\"main.uploadFiles($files,'file')\"\n             ngf-select=\"main.uploadFiles($files,'file')\"\n        >\n            <span>בחר או גרור תמונות</span>\n        </div>\n        <div>\n            <h4>יצירת רביעיה חדשה</h4>\n            <form ng-submit=\"main.createGroup()\">\n                <div class=\"form-group\">\n                    <label>\n                        שם\n                    </label>\n                    <input class=\"form-control\" type=\"text\" ng-model=\"main.newGroupName\">\n                </div>\n                <button ng-disabled=\"!main.newGroupFormOk()\" class=\"btn btn-primary\" type=\"submit\">יצירה</button>\n            </form>\n        </div>\n        <ul class=\"list-group\">\n            <li class=\"bg-warning list-group-item\" ng-repeat=\"group in main.groups\">\n                {{ group.name }}: {{ group.cards.length}} קלפים\n            </li>\n        </ul>\n    </div>\n\n    <div class=\"col-9\">\n        <h1>\n            <i class=\"fas fa-club\"></i>\n            רביעיות\n            <div class=\"btn-group float-right\" role=\"group\">\n                <button class=\"btn btn-danger\" ng-click=\"main.restart()\">\n                    התחל מהתחלה\n                </button>\n                <button class=\"btn btn-success\" ng-click=\"main.doSave()\">\n                    שמור\n                </button>\n                <button class=\"btn btn-success\" ng-click=\"main.draw()\">\n                    צייר\n                </button>\n            </div>\n        </h1>\n        <div class=\"row\" style=\"padding-top: 10px\" ng-repeat=\"group in main.groups\">\n            <div class=\"col-12\">\n                <div class=\"row\">\n                    <div class=\"col-12 text-center\">\n                        <h3>{{group.name}}</h3>\n                    </div>\n                </div>\n                <div class=\"row\">\n                    <div class=\"col-3\" ng-repeat=\"card in group.cards\">\n                        <div>\n                            <canvas style=\"border: 1px black solid\" width=\"300\" height=\"440\" ng-attr-id=\"canvas-{{card.id}}\">\n                            </canvas>\n                        </div>\n                        <div>\n                            <button class=\"btn btn-outline-danger\" ng-click=\"main.removeCard(card)\">\n                                <i class=\"fa fa-trash\"></i>\n                            </button>\n                            <form>\n                                <select class=\"form-control\"\n                                        ng-options=\"group.name for group in main.groups\"\n                                        ng-model=\"card.group\"\n                                        ng-change=\"main.cardGroupChanged(card)\">\n                                </select>\n                                <div class=\"form-group\">\n                                    <label>\n                                        שם\n                                    </label>\n                                    <input class=\"form-control\" type=\"text\"\n                                           ng-model=\"card.name\"\n                                    >\n                                </div>\n                            </form>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>";
 
 /***/ }),
 /* 19 */
@@ -56141,12 +56141,13 @@ var NullGroup = function (_Group) {
 }(Group);
 
 var Card = function () {
-    function Card(group, url) {
+    function Card(id, group, url) {
         _classCallCheck(this, Card);
 
         this.url = url;
         group.addCard(this);
         this.name = null;
+        this.id = id;
     }
 
     _createClass(Card, [{
@@ -56155,6 +56156,17 @@ var Card = function () {
             return {
                 url: this.url,
                 name: this.name
+            };
+        }
+    }, {
+        key: "draw",
+        value: function draw() {
+            var canvas = document.getElementById("canvas-" + this.id);
+            var ctx = canvas.getContext("2d");
+            var img = new Image();
+            img.src = this.url;
+            img.onload = function () {
+                ctx.drawImage(img, 0, 50, 300, 300);
             };
         }
     }, {
@@ -56184,6 +56196,7 @@ var StartController = function () {
         this.$sce = $sce;
         this.Upload = Upload;
         this.$interval = $interval;
+        this.lastCardId = 0;
         this.nullGroup = new NullGroup();
         this.groups = [this.nullGroup];
         this.restore();
@@ -56193,6 +56206,12 @@ var StartController = function () {
     }
 
     _createClass(StartController, [{
+        key: "getCardId",
+        value: function getCardId() {
+            this.lastCardId++;
+            return this.lastCardId;
+        }
+    }, {
         key: "uploadFiles",
         value: function uploadFiles(files) {
             var _this2 = this;
@@ -56207,7 +56226,7 @@ var StartController = function () {
 
                     this.Upload.base64DataUrl(f).then(function (url) {
                         _this2.$sce.trustAsUrl(url);
-                        new Card(_this2.nullGroup, url);
+                        new Card(_this2.getCardId(), _this2.nullGroup, url);
                     });
                 }
             } catch (err) {
@@ -56332,7 +56351,7 @@ var StartController = function () {
                 for (var _iterator3 = g.cards[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                     var c = _step3.value;
 
-                    var card = new Card(group, c.url);
+                    var card = new Card(this.getCardId(), group, c.url);
                     card.name = c.name;
                 }
             } catch (err) {
@@ -56358,6 +56377,56 @@ var StartController = function () {
             this.nullGroup = new NullGroup();
             this.groups = [this.nullGroup];
             this.save();
+        }
+    }, {
+        key: "draw",
+        value: function draw() {
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = this.groups[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var g = _step4.value;
+                    var _iteratorNormalCompletion5 = true;
+                    var _didIteratorError5 = false;
+                    var _iteratorError5 = undefined;
+
+                    try {
+                        for (var _iterator5 = g.cards[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                            var c = _step5.value;
+
+                            c.draw();
+                        }
+                    } catch (err) {
+                        _didIteratorError5 = true;
+                        _iteratorError5 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                                _iterator5.return();
+                            }
+                        } finally {
+                            if (_didIteratorError5) {
+                                throw _iteratorError5;
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
+            }
         }
     }]);
 
