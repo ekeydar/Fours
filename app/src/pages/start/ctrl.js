@@ -1,3 +1,6 @@
+import html2canvas from 'html2canvas';
+import JSZip from 'jszip';
+
 class Group {
     constructor(name) {
         this.name = name;
@@ -61,23 +64,18 @@ class Card {
         let y = 350 + this.index*20;
         return y;
     }
-    draw() {
-        let canvas = document.getElementById(`canvas-${this.id}`);
-        let ctx = canvas.getContext("2d");
-        var img = new Image;
-        img.src = this.url;
-        img.onload = function() {
-            ctx.drawImage(img, 0, 50, 300, 300);
-        }
+    get divId() {
+        return `game-card-${this.id}`;
     }
 }
 
 
 export default class StartController {
-    constructor(Upload, $sce, $interval) {
+    constructor($scope, Upload, $sce, $interval) {
         'ngInject';
         window.main = this;
-        this.$sce = $sce
+        this.$sce = $sce;
+        this.$scope = $scope;
         this.Upload = Upload;
         this.$interval = $interval;
         this.lastCardId = 0;
@@ -164,11 +162,35 @@ export default class StartController {
         this.save();
     }
     draw() {
+        this.startDraw = 0;
         for (let g of this.groups) {
             for (let c of g.cards) {
-                c.draw();
+                this.drawCard(c)
             }
         }
+    }
+    drawCard(c) {
+        this.printMode = true;
+        let images = document.getElementById("images");
+        let div = document.getElementById(c.divId);
+        let zip = new JSZip();
+        html2canvas(div).then(canvas => {
+            canvas.toBlob(function (blob) {
+                let newImg = document.createElement('img');
+                url = URL.createObjectURL(blob);
+                // newImg.onload = function () {
+                //     // no longer need to read the blob so it's revoked
+                //     URL.revokeObjectURL(url);
+                // };
+                newImg.src = url;
+                images.appendChild(newImg);
+                this.startDraw-=1;
+                if (this.startDraw <= 0) {
+                    this.printMode = false;
+                    this.$scope.$apply();
+                }
+            });
+        });
     }
 }
 
