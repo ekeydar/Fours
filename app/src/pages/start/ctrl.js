@@ -27,6 +27,9 @@ class Group {
             cards: this.cards.map(c=>c.asJson())
         }
     }
+    get moveToTitle() {
+        return 'העבר ל' + '' + this.name;
+    }
 }
 
 class NullGroup extends Group {
@@ -103,7 +106,6 @@ export default class StartController {
         this.save();
     }
     removeCard(card) {
-        console.log("In remove card...")
         card.group.removeCard(card);
         this.save();
     }

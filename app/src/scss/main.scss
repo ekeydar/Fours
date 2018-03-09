@@ -18,8 +18,11 @@ body {
 }
 
 .active-card {
-    fill: red;
+    color: red;
     font-weight: bold;
 }
 
 
+.bg-game-card {
+  background: aqua;
+}

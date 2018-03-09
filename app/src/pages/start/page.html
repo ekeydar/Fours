@@ -53,29 +53,32 @@
                 </div>
                 <div class="row">
                     <div class="col-3" ng-repeat="card in group.cards">
-                        <div>
-                            <canvas style="border: 1px black solid" width="300" height="440" ng-attr-id="canvas-{{card.id}}">
-                            </canvas>
-                        </div>
-                        <div>
+                        <div style="margin-bottom: 10px">
                             <button class="btn btn-outline-danger" ng-click="main.removeCard(card)">
                                 <i class="fa fa-trash"></i>
                             </button>
-                            <form>
-                                <select class="form-control"
-                                        ng-options="group.name for group in main.groups"
-                                        ng-model="card.group"
-                                        ng-change="main.cardGroupChanged(card)">
-                                </select>
-                                <div class="form-group">
-                                    <label>
-                                        שם
-                                    </label>
-                                    <input class="form-control" type="text"
-                                           ng-model="card.name"
-                                    >
-                                </div>
-                            </form>
+                            <select class="form-control"
+                                    ng-options="group.moveToTitle for group in main.groups"
+                                    ng-model="card.group"
+                                    ng-change="main.cardGroupChanged(card)">
+                            </select>
+                        </div>
+                        <div class="card">
+                            <div class="card-header bg-game-card text-center">
+                                <h4 class="card-title">{{ card.name }}</h4>
+                            </div>
+                            <img class="card-img-top" ng-src="{{card.url}}" alt="{{card.name}}">
+                            <ul class="list-unstyled">
+                                <li ng-repeat="gc in card.group.cards" style="padding-right: 20px">
+                                    &bull;
+                                    <span ng-if="gc != card">
+                                    {{gc.name}}
+                                    </span>
+                                    <span ng-if="gc == card">
+                                        <input class="active-card" ng-model="card.name" type="text">
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
