@@ -1,5 +1,6 @@
 import html2canvas from 'html2canvas';
 import JSZip from 'jszip';
+import FileSaver from 'file-saver';
 
 class Group {
     constructor(name) {
@@ -151,20 +152,45 @@ export default class StartController {
     }
 
     save() {
-        //this.doSave()
+        this.saveToLocalStorage()
     }
 
-    doSave() {
+    saveToLocalStorage() {
         console.log("saving");
         let data = angular.toJson(this.groups.map(g => g.asJson()));
         window.localStorage.setItem("fours-groups", data);
     }
 
+    saveToJson() {
+        this.saveToLocalStorage();
+        let text = window.localStorage.getItem("fours-groups");
+        let textBlob = new Blob([text], {type: "text/plain;charset=utf-8"});
+        FileSaver.saveAs(textBlob, "dump.json");
+    }
+
+
+
     restore() {
+        this.restart();
         let data = window.localStorage.getItem("fours-groups");
         if (data) {
-            this.groups = angular.fromJson(data).map(g => this.restoreGroup(g))
-            this.nullGroup = this.groups.filter(g => g.isNull == true)[0];
+            this.restoreFromString(data);
+        }
+    }
+
+    restoreFromString(data) {
+        this.groups = angular.fromJson(data).map(g => this.restoreGroup(g))
+        this.nullGroup = this.groups.filter(g => g.isNull == true)[0];
+    }
+
+    restoreFromJson($file) {
+        let fr = new FileReader()
+        fr.readAsText($file);
+        fr.onload = () => {
+            this.$scope.$apply(() => {
+                this.inRestoreFromJson = false;
+                this.restoreFromString(fr.result);
+            });
         }
     }
 
@@ -200,13 +226,14 @@ export default class StartController {
             let $scope = this.$scope;
             zip.generateAsync({type: "blob"})
                 .then(function (content) {
-                    console.log(content);
+                    FileSaver.saveAs(content, "game.zip");
                     main.zipUrl = URL.createObjectURL(content);
                     $scope.$apply();
                     window.setTimeout(function() {
                         let a = document.getElementById("zip-download");
                         a.href = main.zipUrl;
                         a.download = "game.zip";
+
                     });
                 });
         })

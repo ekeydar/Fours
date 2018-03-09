@@ -35,24 +35,48 @@
             רביעיות
             <div class="float-right">
                 <div class="btn-group" role="group">
-                    <button class="btn btn-danger" ng-click="main.restart()">
+                    <button class="btn btn-outline-danger" ng-click="main.restart()">
                         התחל מהתחלה
                     </button>
-                    <button class="btn btn-success" ng-click="main.doSave()">
+                    <button class="btn btn-outline-success" ng-click="main.saveToJson()">
                         שמור
                     </button>
-                    <button class="btn btn-success" ng-click="main.draw()">
+                    <button class="btn btn-outline-success" ng-click="main.inRestoreFromJson = true">
+                        פתח
+                    </button>
+                    <button class="btn btn-outline-success" ng-click="main.draw()">
                         הדפס
                     </button>
                 </div>
+                <!-- comment
                 <small ng-if="main.zipUrl">
                     <a id="zip-download">
                         <i class="fa fa-download"></i>
                     </a>
                 </small>
+                -->
             </div>
-
         </h1>
+        <div class="row" ng-if="main.inRestoreFromJson">
+            <div class="col-4 offset-8">
+                <div class="upload-box"
+                     ngf-multiple="false"
+                     ngf-drop-available="true"
+                     ngf-drag-over-class="'dragover'"
+                     ngf-drop="main.restoreFromJson($file)"
+                     ngf-select="main.restoreFromJson($file)"
+                     ngf-pattern="'.json,application/json'"
+                     ngf-resize="{width: 600, height: 600, centerCrop: true}"
+                >
+                    <span>בחר קובץ שנשמר</span>
+                    <p class-text-center>
+                        <button class="btn btn-primary" ng-click="main.inRestoreFromJson=false;">
+                            סגור
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
         <div class="row" style="padding-top: 10px" ng-repeat="group in main.groups">
             <div class="col-12">
                 <div class="row">
@@ -74,7 +98,7 @@
                         </div>
                         <div class="card" id="{{card.divId}}">
                             <div class="card-header bg-game-card text-center">
-                                <h4 class="card-title">{{ card.name }}</h4>
+                                <h4 class="card-title">{{ card.group.name }}</h4>
                             </div>
                             <img class="card-img-top" ng-src="{{card.url}}" alt="{{card.name}}">
                             <ul class="list-unstyled">
