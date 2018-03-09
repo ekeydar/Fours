@@ -33,17 +33,25 @@
         <h1>
             <i class="fas fa-club"></i>
             רביעיות
-            <div class="btn-group float-right" role="group">
-                <button class="btn btn-danger" ng-click="main.restart()">
-                    התחל מהתחלה
-                </button>
-                <button class="btn btn-success" ng-click="main.doSave()">
-                    שמור
-                </button>
-                <button class="btn btn-success" ng-click="main.draw()">
-                    צייר
-                </button>
+            <div class="float-right">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-danger" ng-click="main.restart()">
+                        התחל מהתחלה
+                    </button>
+                    <button class="btn btn-success" ng-click="main.doSave()">
+                        שמור
+                    </button>
+                    <button class="btn btn-success" ng-click="main.draw()">
+                        הדפס
+                    </button>
+                </div>
+                <small ng-if="main.zipUrl">
+                    <a id="zip-download">
+                        <i class="fa fa-download"></i>
+                    </a>
+                </small>
             </div>
+
         </h1>
         <div class="row" style="padding-top: 10px" ng-repeat="group in main.groups">
             <div class="col-12">
