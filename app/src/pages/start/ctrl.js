@@ -97,6 +97,7 @@ export default class StartController {
 
 
     uploadFiles(files) {
+        console.log("uploading...")
         for (let f of files) {
             this.Upload.base64DataUrl(f).then(url => {
                 this.$sce.trustAsUrl(url);
