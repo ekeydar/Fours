@@ -11,3 +11,15 @@ body {
     height: 200px;
     text-align: center;
 }
+
+.sidebar {
+    @extend .bg-warning;
+   min-height: 600px;
+}
+
+.active-card {
+    fill: red;
+    font-weight: bold;
+}
+
+

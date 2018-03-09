@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-12">
+    <div class="col-3 sidebar">
         <div class="upload-box"
              ngf-multiple="true"
              ngf-drop-available="true"
@@ -7,38 +7,91 @@
              ngf-drop="main.uploadFiles($files,'file')"
              ngf-select="main.uploadFiles($files,'file')"
         >
-            <span>Select File or Drop File</span>
+            <span>בחר או גרור תמונות</span>
+        </div>
+        <div>
+            <h4>יצירת רביעיה חדשה</h4>
+            <form ng-submit="main.createGroup()">
+                <div class="form-group">
+                    <label>
+                        שם
+                    </label>
+                    <input class="form-control" type="text" ng-model="main.newGroupName">
+                </div>
+                <button ng-disabled="!main.newGroupFormOk()" class="btn btn-primary" type="submit">יצירה</button>
+            </form>
+        </div>
+        <ul class="list-group">
+            <li class="bg-warning list-group-item" ng-repeat="group in main.groups">
+                {{ group.name }}: {{ group.cards.length}} קלפים
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-9">
+        <h1>
+            <i class="fas fa-club"></i>
+            רביעיות
+            <div class="btn-group float-right" role="group">
+                <button class="btn btn-danger" ng-click="main.restart()">
+                    התחל מהתחלה
+                </button>
+                <button class="btn btn-success" ng-click="main.doSave()">
+                    שמור
+                </button>
+            </div>
+        </h1>
+        <div class="row" style="padding-top: 10px" ng-repeat="group in main.groups">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3>{{group.name}}</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3" ng-repeat="card in group.cards">
+                        <div>
+                            <svg width="300" height="440" style="border: 1px black solid"
+                                 xmlns="http://www.w3.org/1999/svg"
+                                 class="card-svg"
+                            >
+                                <text x="150" y="30" text-anchor="middle" font-weight="bold" font-size="20">
+                                    {{ card.group.name }}
+                                </text>
+                                <!--<image ng-attr-href="{{ card.url }}" x="10" y="50" height="280px" width="280px"/>-->
+                                <text ng-attr-y="{{gc.y}}" x="280" text-anchor="left"
+                                      ng-repeat="gc in card.group.cards"
+                                      ng-if="$index <= 3"
+                                      ng-class="{'active-card': $index==card.index}"
+                                >
+                                    &bull;
+                                    {{ gc.name }}
+                                </text>
+                            </svg>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-danger" ng-click="main.removeCard(card)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                            <form>
+                                <select class="form-control"
+                                        ng-options="group.name for group in main.groups"
+                                        ng-model="card.group"
+                                        ng-change="main.cardGroupChanged(card)">
+                                </select>
+                                <div class="form-group">
+                                    <label>
+                                        שם
+                                    </label>
+                                    <input class="form-control" type="text"
+                                           ng-model="card.name"
+                                    >
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<div class="row" style="padding-top: 10px">
-    <div class="col-3" ng-repeat="card in main.cards">
-            <div>
-                <svg width="300" height="440" style="border: 1px black solid" xmlns="http://www.w3.org/2000/svg">
-                    <text x="150" y="30" text-anchor="middle" font-weight="bold" font-size="20">
-                        {{ card.series.name }}
-                    </text>
-                    <image href="{{ card.url }}" x="10" y="50" height="280px" width="280px"/>
-                    <text x="280" y="350">
-                        &bull;
-                        {{ card.name }}
-                    </text>
-                </svg>
-            </div>
-            <div>
-                <button class="btn btn-outline-danger">
-                    <i class="fa fa-trash"></i>
-                </button>
-                <form>
-                    <div class="form-group">
-                        <label>
-                            שם
-                        </label>
-                        <input class="form-control" type="text" ng-model="card.name">
-                    </div>
-                </form>
-            </div>
-    </div>
-</div>
-
-
