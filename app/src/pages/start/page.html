@@ -81,7 +81,9 @@
             <div class="col-12">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h3>{{group.name}}</h3>
+                        <h3>
+                            {{group.name}}
+                        </h3>
                     </div>
                 </div>
                 <div class="row">
@@ -98,20 +100,26 @@
                         </div>
                         <div class="card" id="{{card.divId}}">
                             <div class="card-header bg-game-card text-center">
-                                <h4 class="card-title">{{ card.group.name }}</h4>
+                                <h4 class="card-title">
+                                    <span ng-repeat="name_part in group.nameParts">
+                                        <span dir="rtl">{{name_part}}</span>
+                                        &nbsp;
+                                    </span>
+                                </h4>
                             </div>
                             <img class="card-img-top" ng-src="{{card.url}}" alt="{{card.name}}">
                             <ul class="list-unstyled">
                                 <li ng-repeat="gc in card.group.cards" style="padding-right: 20px">
                                     &bull;
-                                    <span ng-if="gc != card">
-                                    {{gc.name}}
+                                    <span ng-if="gc != card || gc == card && main.printMode"
+                                          ng-class="{'active-card': gc == card}">
+                                        <span ng-repeat="name_part in gc.nameParts">
+                                            {{ name_part }}
+                                            &nbsp;
+                                        </span>
                                     </span>
                                     <span ng-if="gc == card && !main.printMode">
                                         <input class="active-card" ng-model="card.name" type="text">
-                                    </span>
-                                    <span ng-if="gc == card && main.printMode" class="active-card">
-                                        {{gc.name}}
                                     </span>
                                 </li>
                             </ul>

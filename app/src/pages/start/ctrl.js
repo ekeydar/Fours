@@ -2,8 +2,18 @@ import html2canvas from 'html2canvas';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
 
-class Group {
+class Named {
+    get nameParts() {
+        if (!this.name) {
+            return [""]
+        }
+        return this.name.split(" ");
+    }
+}
+
+class Group extends Named {
     constructor(name) {
+        super();
         this.name = name;
         this.cards = [];
     }
@@ -52,8 +62,9 @@ class NullGroup extends Group {
     }
 }
 
-class Card {
+class Card extends Named {
     constructor(id, group, url) {
+        super()
         this.url = url;
         group.addCard(this);
         this.name = null;
@@ -143,7 +154,6 @@ export default class StartController {
 
     cardGroupChanged(card) {
         let curGroup = card.group;
-        console.log(curGroup);
         for (let g of this.groups) {
             g.removeCard(card);
         }
@@ -171,8 +181,8 @@ export default class StartController {
 
 
     restore() {
-        this.restart();
         let data = window.localStorage.getItem("fours-groups");
+        this.restart();
         if (data) {
             this.restoreFromString(data);
         }
@@ -181,6 +191,7 @@ export default class StartController {
     restoreFromString(data) {
         this.groups = angular.fromJson(data).map(g => this.restoreGroup(g))
         this.nullGroup = this.groups.filter(g => g.isNull == true)[0];
+        this.saveToLocalStorage();
     }
 
     restoreFromJson($file) {
@@ -211,6 +222,7 @@ export default class StartController {
     }
 
     draw() {
+        this.saveToLocalStorage()
         this.printMode = true;
         this.zipUrl = null;
         let zip = new JSZip();
@@ -228,13 +240,13 @@ export default class StartController {
                 .then(function (content) {
                     FileSaver.saveAs(content, "game.zip");
                     main.zipUrl = URL.createObjectURL(content);
+                    main.printMode = false;
                     $scope.$apply();
-                    window.setTimeout(function() {
-                        let a = document.getElementById("zip-download");
-                        a.href = main.zipUrl;
-                        a.download = "game.zip";
-
-                    });
+                    // window.setTimeout(function() {
+                    //     let a = document.getElementById("zip-download");
+                    //     a.href = main.zipUrl;
+                    //     a.download = "game.zip";
+                    // }, 1000);
                 });
         })
     }
