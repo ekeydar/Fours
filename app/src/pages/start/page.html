@@ -1,4 +1,29 @@
-<div class="row">
+<div ng-if="main.printedCard">
+    <div id="printed-card" style="border: 3px black solid ; width: 300px ; margin: 5px ; position: absolute; top: 50px; right:50px">
+        <div class="text-center" style="background: aqua">
+            <h4 style="height: 40px ; margin: 0px">
+                <span ng-repeat="name_part in main.printedCard.group.nameParts">
+                    <span dir="rtl">{{name_part}}</span>
+                    &nbsp;
+                </span>
+            </h4>
+        </div>
+        <img style="height: 294px; width: 294px" class="card-img-top" ng-src="{{main.printedCard.url}}"
+             alt="{{main.printedCard.name}}">
+        <ul class="list-unstyled" style="background:white">
+            <li ng-repeat="gc in main.printedCard.group.cards" style="padding-right: 20px" style="height:25px">
+                &bull;
+                <span ng-class="{'active-card': gc == main.printedCard}">
+                        <span ng-repeat="name_part in gc.nameParts">
+                            {{ name_part }}
+                            &nbsp;
+                        </span>
+                    </span>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row" ng-if="!main.printedCard">
     <div class="col-3 sidebar">
         <div class="upload-box"
              ngf-multiple="true"
@@ -77,33 +102,6 @@
                 </div>
             </div>
         </div>
-        <div class="row" ng-if="main.printedCard">
-            <div class="col-3">
-                <div class="card" id="printed-card" style="border: 3px black solid ; width: 300px ; margin: 5px">
-                    <div class="card-header bg-game-card text-center">
-                        <h4 class="card-title" style="height: 30px">
-                            <span ng-repeat="name_part in main.printedCard.group.nameParts">
-                                <span dir="rtl">{{name_part}}</span>
-                                &nbsp;
-                            </span>
-                        </h4>
-                    </div>
-                    <img style="height: 294px; width: 294px" class="card-img-top" ng-src="{{main.printedCard.url}}"
-                         alt="{{main.printedCard.name}}">
-                    <ul class="list-unstyled">
-                        <li ng-repeat="gc in main.printedCard.group.cards" style="padding-right: 20px" style="height:25px">
-                            &bull;
-                            <span ng-class="{'active-card': gc == main.printedCard}">
-                                <span ng-repeat="name_part in gc.nameParts">
-                                    {{ name_part }}
-                                    &nbsp;
-                                </span>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
         <div class="row" style="padding-top: 10px" ng-repeat="group in main.groups">
             <div class="col-12">
                 <div class="row">
@@ -134,7 +132,8 @@
                                     </span>
                                 </h4>
                             </div>
-                            <img style="height: 294px; width: 294px" class="card-img-top" ng-src="{{card.url}}" alt="{{card.name}}">
+                            <img style="height: 294px; width: 294px" class="card-img-top" ng-src="{{card.url}}"
+                                 alt="{{card.name}}">
                             <ul class="list-unstyled">
                                 <li ng-repeat="gc in card.group.cards" style="padding-right: 20px" style="height:25px">
                                     &bull;
