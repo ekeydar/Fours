@@ -94,23 +94,20 @@ class Card extends Named {
 
 
 export default class StartController {
-    constructor($scope, Upload, $q, $sce, $interval) {
+    constructor($scope, Upload, $q, $sce, $interval, $timeout) {
         'ngInject';
         window.main = this;
         this.$sce = $sce;
         this.$scope = $scope;
         this.Upload = Upload;
         this.$interval = $interval;
+        this.$timeout = $timeout;
         this.$q = $q;
         this.lastCardId = 0;
         this.nullGroup = new NullGroup();
         this.groups = [this.nullGroup];
 
         this.restore();
-        // this.savePromise = $interval(() => {
-        //     this.save();
-        // }, 10000)
-
     }
 
     getCardId() {
@@ -127,19 +124,16 @@ export default class StartController {
                 new Card(this.getCardId(), this.nullGroup, url)
             })
         }
-        this.save();
     }
 
     removeCard(card) {
         card.group.removeCard(card);
-        this.save();
     }
 
     createGroup() {
         let n = this.newGroupName;
         this.groups.push(new Group(n));
         this.newGroupName = null;
-        this.save();
     }
 
     newGroupFormOk() {
@@ -158,23 +152,11 @@ export default class StartController {
             g.removeCard(card);
         }
         curGroup.addCard(card);
-        this.save();
-    }
-
-    save() {
-        this.saveToLocalStorage()
-    }
-
-    saveToLocalStorage() {
-        console.log("saving");
-        let data = angular.toJson(this.groups.map(g => g.asJson()));
-        window.localStorage.setItem("fours-groups", data);
     }
 
     saveToJson() {
-        this.saveToLocalStorage();
-        let text = window.localStorage.getItem("fours-groups");
-        let textBlob = new Blob([text], {type: "text/plain;charset=utf-8"});
+        let data = angular.toJson(this.groups.map(g => g.asJson()));
+        let textBlob = new Blob([data], {type: "text/plain;charset=utf-8"});
         FileSaver.saveAs(textBlob, "dump.json");
     }
 
@@ -191,7 +173,6 @@ export default class StartController {
     restoreFromString(data) {
         this.groups = angular.fromJson(data).map(g => this.restoreGroup(g))
         this.nullGroup = this.groups.filter(g => g.isNull == true)[0];
-        this.saveToLocalStorage();
     }
 
     restoreFromJson($file) {
@@ -218,22 +199,33 @@ export default class StartController {
     restart() {
         this.nullGroup = new NullGroup();
         this.groups = [this.nullGroup];
-        this.save();
+    }
+
+    drawCardAfterCard(zip, cards, index) {
+        let c = cards[index];
+        return this.drawCard(zip, c).then(() => {
+            if (index < cards.length) {
+                return this.drawCardAfterCard(zip, cards, index + 1);
+            }
+            return true;
+        })
     }
 
     draw() {
-        this.saveToLocalStorage()
         this.printMode = true;
         this.zipUrl = null;
         let zip = new JSZip();
         let promises = [];
+        let cards = []
         for (let g of this.groups) {
             for (let c of g.cards) {
-                promises.push(this.drawCard(zip, c));
+                cards.push(c);
             }
         }
+        let index = 0;
+        let p = this.drawCardAfterCard(zip, cards, 0);
         let main = this;
-        this.$q.all(promises).then(() => {
+        this.$q.when(p).then(() => {
             console.log("all done");
             let $scope = this.$scope;
             zip.generateAsync({type: "blob"})
@@ -253,18 +245,24 @@ export default class StartController {
 
     drawCard(zip, c) {
         let defer = this.$q.defer();
-        let images = document.getElementById("images");
-        let div = document.getElementById(c.divId);
-        let $scope = this.$scope;
-        html2canvas(div).then(canvas => {
-            canvas.toBlob(function (blob) {
-                zip.file(`card_${c.id}.png`, blob);
-                console.log(`${c.id} done`);
-                $scope.$apply(function () {
-                    defer.resolve();
+        this.printedCard = c;
+        if (!c) {
+            defer.resolve();
+            return defer.promise;
+        }
+        this.$timeout(() => {
+            let div = document.getElementById('printed-card');
+            let $scope = this.$scope;
+            html2canvas(div).then(canvas => {
+                canvas.toBlob(function (blob) {
+                    zip.file(`card_${c.id}.png`, blob);
+                    console.log(`${c.id} done`);
+                    $scope.$apply(function () {
+                        defer.resolve();
+                    });
                 });
             });
-        });
+        }, 20);
         return defer.promise;
     }
 }
