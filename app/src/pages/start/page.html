@@ -1,7 +1,7 @@
 <div ng-if="main.printedCard">
     <div id="printed-card" style="border: 3px black solid ; width: 300px ; margin: 5px ; position: absolute; top: 50px; right:50px">
         <div class="text-center" style="background: aqua">
-            <h4 style="height: 40px ; margin: 0px">
+            <h4 style="line-height: 40px; height: 40px ; margin: 0px; font-weight: bolder">
                 <span ng-repeat="name_part in main.printedCard.group.nameParts">
                     <span dir="rtl">{{name_part}}</span>
                     &nbsp;
@@ -14,7 +14,7 @@
             <li ng-repeat="gc in main.printedCard.group.cards" style="padding-right: 20px" style="height:25px">
                 &bull;
                 <span ng-class="{'active-card': gc == main.printedCard}">
-                        <span ng-repeat="name_part in gc.nameParts">
+                        <span ng-repeat="name_part in gc.nameParts" style="font-weight: bold">
                             {{ name_part }}
                             &nbsp;
                         </span>
