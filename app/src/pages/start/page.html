@@ -1,5 +1,5 @@
 <div ng-if="main.printedCard" class="printed-card-wrapper">
-    <div id="printed-card">
+    <div id="printed-card" class="game-card">
         <div class="h4-wrapper text-center">
             <h4>
                 <span ng-repeat="name_part in main.printedCard.group.nameParts">
@@ -13,12 +13,12 @@
         <ul class="list-unstyled" style="background:white">
             <li ng-repeat="gc in main.printedCard.group.cards">
                 &bull;
-                <span ng-class="{'active-card': gc == main.printedCard}">
-                        <span ng-repeat="name_part in gc.nameParts">
-                            {{ name_part }}
-                            &nbsp;
-                        </span>
+                <span class="titles-line" ng-class="{'active-card': gc == main.printedCard}">
+                    <span ng-repeat="name_part in gc.nameParts">
+                        {{ name_part }}
+                        &nbsp;
                     </span>
+                </span>
             </li>
         </ul>
     </div>
@@ -31,7 +31,7 @@
              ngf-drag-over-class="'dragover'"
              ngf-drop="main.uploadFiles($files,'file')"
              ngf-select="main.uploadFiles($files,'file')"
-             ngf-resize="{width: 600, height: 600, centerCrop: true}"
+             ngf-resize="{width: 1200, height: 1200, centerCrop: true}"
         >
             <span>בחר או גרור תמונות</span>
         </div>
@@ -72,6 +72,10 @@
                     <button class="btn btn-outline-success" ng-click="main.draw()">
                         הדפס
                     </button>
+                    <button class="btn btn-outline-success" ng-click="main.drawExample()">
+                        דוגמא
+                    </button>
+
                 </div>
                 <!-- comment
                 <small ng-if="main.zipUrl">
@@ -126,10 +130,7 @@
                         <div class="card" id="{{card.divId}}" style="border: 3px black solid ; width: 300px">
                             <div class="card-header bg-game-card text-center">
                                 <h4 class="card-title">
-                                    <span ng-repeat="name_part in group.nameParts">
-                                        <span dir="rtl">{{name_part}}</span>
-                                        &nbsp;
-                                    </span>
+                                    {{card.group.name}}
                                 </h4>
                             </div>
                             <img style="height: 294px; width: 294px" class="card-img-top" ng-src="{{card.url}}"
@@ -137,15 +138,11 @@
                             <ul class="list-unstyled">
                                 <li ng-repeat="gc in card.group.cards" style="padding-right: 20px" style="height:25px">
                                     &bull;
-                                    <span ng-if="gc != card || gc == card && main.printMode"
-                                          ng-class="{'active-card': gc == card}">
-                                        <span ng-repeat="name_part in gc.nameParts">
-                                            {{ name_part }}
-                                            &nbsp;
-                                        </span>
+                                    <span ng-if="gc != card">
+                                        {{ gc.name }}
                                     </span>
-                                    <span ng-if="gc == card && !main.printMode">
-                                        <input class="active-card" ng-model="card.name" type="text">
+                                    <span ng-if="gc == card">
+                                        <input type="text" ng-model="gc.name" class="active-card">
                                     </span>
                                 </li>
                             </ul>

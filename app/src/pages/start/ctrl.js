@@ -217,8 +217,18 @@ export default class StartController {
         })
     }
 
+    drawExample() {
+        let cards = []
+        for (let g of this.groups) {
+            for (let c of g.cards) {
+                cards.push(c);
+            }
+        }
+        let c = cards[0];
+        this.printedCard = cards[0];
+    }
+
     draw() {
-        this.printMode = true;
         this.zipUrl = null;
         let zip = new JSZip();
         let promises = [];
@@ -238,7 +248,6 @@ export default class StartController {
                 .then(function (content) {
                     FileSaver.saveAs(content, "game.zip");
                     main.zipUrl = URL.createObjectURL(content);
-                    main.printMode = false;
                     $scope.$apply();
                     // window.setTimeout(function() {
                     //     let a = document.getElementById("zip-download");
@@ -260,7 +269,7 @@ export default class StartController {
             let div = document.getElementById('printed-card');
             let $scope = this.$scope;
             html2canvas(div, {
-                
+
             }).then(canvas => {
                 canvas.toBlob(function (blob) {
                     zip.file(`card_${c.id}.png`, blob);
