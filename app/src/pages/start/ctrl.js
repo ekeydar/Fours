@@ -260,6 +260,7 @@ export default class StartController {
             let div = document.getElementById('printed-card');
             let $scope = this.$scope;
             html2canvas(div, {
+                
             }).then(canvas => {
                 canvas.toBlob(function (blob) {
                     zip.file(`card_${c.id}.png`, blob);
