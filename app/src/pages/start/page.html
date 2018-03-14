@@ -1,20 +1,20 @@
-<div ng-if="main.printedCard">
-    <div id="printed-card" style="border: 3px black solid ; width: 300px ; margin: 5px ; position: absolute; top: 50px; right:50px">
-        <div class="text-center" style="background: aqua">
-            <h4 style="line-height: 40px; height: 40px ; margin: 0px; font-weight: bolder">
+<div ng-if="main.printedCard" class="printed-card-wrapper">
+    <div id="printed-card">
+        <div class="h4-wrapper text-center">
+            <h4>
                 <span ng-repeat="name_part in main.printedCard.group.nameParts">
                     <span dir="rtl">{{name_part}}</span>
                     &nbsp;
                 </span>
             </h4>
         </div>
-        <img style="height: 294px; width: 294px" class="card-img-top" ng-src="{{main.printedCard.url}}"
+        <img class="card-img-top" ng-src="{{main.printedCard.url}}"
              alt="{{main.printedCard.name}}">
         <ul class="list-unstyled" style="background:white">
-            <li ng-repeat="gc in main.printedCard.group.cards" style="padding-right: 20px" style="height:25px">
+            <li ng-repeat="gc in main.printedCard.group.cards">
                 &bull;
                 <span ng-class="{'active-card': gc == main.printedCard}">
-                        <span ng-repeat="name_part in gc.nameParts" style="font-weight: bold">
+                        <span ng-repeat="name_part in gc.nameParts">
                             {{ name_part }}
                             &nbsp;
                         </span>

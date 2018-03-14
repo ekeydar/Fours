@@ -110,6 +110,12 @@ export default class StartController {
         this.restore();
     }
 
+    get styles() {
+        return {
+
+        }
+    }
+
     getCardId() {
         this.lastCardId++;
         return this.lastCardId;
@@ -253,7 +259,8 @@ export default class StartController {
         this.$timeout(() => {
             let div = document.getElementById('printed-card');
             let $scope = this.$scope;
-            html2canvas(div).then(canvas => {
+            html2canvas(div, {
+            }).then(canvas => {
                 canvas.toBlob(function (blob) {
                     zip.file(`card_${c.id}.png`, blob);
                     console.log(`${c.id} done`);
