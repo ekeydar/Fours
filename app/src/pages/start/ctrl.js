@@ -110,12 +110,6 @@ export default class StartController {
         this.restore();
     }
 
-    get styles() {
-        return {
-
-        }
-    }
-
     getCardId() {
         this.lastCardId++;
         return this.lastCardId;
@@ -138,8 +132,14 @@ export default class StartController {
 
     createGroup() {
         let n = this.newGroupName;
-        this.groups.push(new Group(n));
+        let g = new Group(n);
+        this.groups.push(g);
         this.newGroupName = null;
+        let cards = [...this.nullGroup.cards];
+        for (let c of cards) {
+            c.group = g;
+            this.cardGroupChanged(c)
+        }
     }
 
     newGroupFormOk() {
@@ -217,27 +217,28 @@ export default class StartController {
         })
     }
 
-    drawExample() {
-        let cards = []
+    drawExample(card) {
+        this.printedCard = card;
+    }
+
+    collectCards() {
+        let cards = [];
+        let cardIndex = 1;
         for (let g of this.groups) {
             for (let c of g.cards) {
                 cards.push(c);
+                c.id = cardIndex;
+                cardIndex++;
             }
         }
-        let c = cards[0];
-        this.printedCard = cards[0];
+        return cards;
     }
 
     draw() {
         this.zipUrl = null;
         let zip = new JSZip();
         let promises = [];
-        let cards = []
-        for (let g of this.groups) {
-            for (let c of g.cards) {
-                cards.push(c);
-            }
-        }
+        let cards = this.collectCards();
         let index = 0;
         let p = this.drawCardAfterCard(zip, cards, 0);
         let main = this;

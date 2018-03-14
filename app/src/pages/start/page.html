@@ -72,10 +72,6 @@
                     <button class="btn btn-outline-success" ng-click="main.draw()">
                         הדפס
                     </button>
-                    <button class="btn btn-outline-success" ng-click="main.drawExample()">
-                        דוגמא
-                    </button>
-
                 </div>
                 <!-- comment
                 <small ng-if="main.zipUrl">
@@ -120,6 +116,9 @@
                         <div style="margin-bottom: 10px">
                             <button class="btn btn-outline-danger" ng-click="main.removeCard(card)">
                                 <i class="fa fa-trash"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" ng-click="main.drawExample(card)">
+                                <i class="fa fa-print"></i>
                             </button>
                             <select class="form-control"
                                     ng-options="group.moveToTitle for group in main.groups"
